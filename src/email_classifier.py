@@ -1,42 +1,31 @@
 import string
 import math
 
-from email_parser import EmailCSVParser
+from email_parser import EmailParser
 
 class SpamClassification:
-    def __init__(self, training_data):
+    def __init__(self, trainingDB):
 
-        self.training_data = training_data
-        self.spam = 0
-        self.ham = 0
-        self.unique_words = {}
-        self.total_spam_words = 0
-        self.total_ham_words = 0
-        self.spam_words = {}
-        self.ham_words = {}
-
-
+        self.trainingDB = trainingDB
+        self.types = ['spam','ham','unique_words', 'total_spam_words', 'spam_words', 'ham_words']
+        self.spam, self.ham, self.total_spam_words, self.total_ham_words = 0
+        self.unique_words, self.spam_words, self.ham_words = {}
         self.train()
 
     def train(self):
-        parser = EmailCSVParser()
-        result = parser.parse(self.training_data)
-        print('Finished training with data from', self.training_data)
-        self.spam = result.get('spam')
-        self.ham = result.get('ham')
-        self.unique_words = result.get('unique_words')
-        self.total_spam_words = result.get('total_spam_words')
-        self.total_ham_words = result.get('total_ham_words')
-        self.spam_words = result.get('spam_words')
-        self.ham_words = result.get('ham_words')
+        parser = EmailParser()
+        result = parser.parse(self.trainingDB)
+        print('Finished training with data from', self.trainingDB)
+        
+        for type in types:
+            self[type] = result.get(type)
 
     def log_p_words_given_spam(self, email):
         sum = 0
         num_unique_words = len(self.unique_words.keys())
+        
         for word in email:
-    
             nominator = (self.spam_words.get(word) or 0) + 1
-    
             denominator = self.total_spam_words + num_unique_words
             sum += math.log(nominator / denominator)
 
@@ -46,9 +35,7 @@ class SpamClassification:
         sum = 0
         num_unique_words = len(self.unique_words.keys())
         for word in email:
-    
             nominator = (self.ham_words.get(word) or 0) + 1
-    
             denominator = self.total_ham_words + num_unique_words
             sum += math.log(nominator / denominator)
 
@@ -61,11 +48,8 @@ class SpamClassification:
         all_words = []
 
         for line in lines:
-    
             m = line.lower()
-    
             m = m.translate(str.maketrans('', '', string.punctuation))
-    
             m = m.translate(str.maketrans('', '', string.digits))
             words = m.split()
             all_words += words

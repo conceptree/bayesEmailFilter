@@ -5,7 +5,7 @@ import string
 csv.field_size_limit(sys.maxsize)
 
 
-class EmailCSVParser:
+class EmailParser:
     def __init__(self):
         self.spam = 0
         self.ham = 0
