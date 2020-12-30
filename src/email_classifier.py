@@ -107,7 +107,6 @@ class EmailClassifier:
         else:
             print('This message is not considered a spam!')
 
-
 def main():
     print('------- Welcome to the Email Classifier Engine -------')
     print('Training the algorithm...')
@@ -143,11 +142,10 @@ def main():
                 print('Not a valid selection, please try again!')
                 main()
         else:
-            print('Please, type a valid email string!')
-            userInput = input('Type your email here:')
+            print('Not a valid selection, please try again!')
+            main()
     else:
         exit
-
 
 if __name__ == "__main__":
     main()
