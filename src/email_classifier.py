@@ -1,7 +1,7 @@
 import string
 import math
 from email_parser import EmailParser
-
+from chart import ChartPrompt
 
 class EmailClassifier:
     def __init__(self):
@@ -40,12 +40,18 @@ class EmailClassifier:
         print('Unique words in the vocabulary: ' +
               str(len(self.unique_words.keys())))
         print('Total words in spam emails: '+str(self.total_spam_words))
-        print('Total words in ham emails: '+str(self.total_ham_words))
+        print('Total words in ham emails: '+str(self.total_spam_words))
         print('Occurrences for each word in spam emails: ' +
               str(len(self.spam_words.keys())))
         print('Occurrences for each word in ham emails: ' +
               str(len(self.ham_words.keys())))
         print('Training complete! Source:', self.trainingDB)
+        
+        chart = ChartPrompt()
+        xVals = [0, 1, 2, 3, 4, 5, 6]
+        yVals = [self.spam, self.ham, len(self.unique_words.keys()), self.total_spam_words, self.total_spam_words, len(self.spam_words.keys()), len(self.ham_words.keys())]
+        yLabels = ['Spam emails', 'Ham emails', 'Unique Words', 'Total in Spam', 'Total in Ham', 'Occur. Spam', 'Occur. Ham']
+        chart.showChart(xVals, yVals, 'Training Results', 'Classifications', 'Descriptions', yLabels)
 
     def prob_words_given_spam(self, email):
         sum = 0
@@ -99,10 +105,16 @@ class EmailClassifier:
 
         print('Probability of being spam:',prob_spam)
         print('Probability of not being spam:',prob_ham)
-        print('Probability of used words being in spam emails:',prob_words_given_spam)
-        print('Probability of used words not being in spam emails:',prob_words_given_ham)      
-        print('Final result:', probability_of_spam > probability_of_ham)
-        if(probability_of_spam > probability_of_ham):
+        print('Probability of used words in spam emails:',prob_words_given_spam)
+        print('Probability of used words not in spam emails:',prob_words_given_ham)
+        if(prob_words_given_ham > prob_words_given_spam):
+            spamAndHamWordsDifference = prob_words_given_ham - prob_words_given_spam
+        else:
+            spamAndHamWordsDifference = prob_words_given_spam - prob_words_given_ham
+        print('Words not in the DB:', str(spamAndHamWordsDifference))
+        print('Final result:', abs(probability_of_spam) > abs(probability_of_ham))
+        
+        if(abs(probability_of_spam) > abs(probability_of_ham)):
             print('This message is considered a spam!')
         else:
             print('This message is not considered a spam!')
