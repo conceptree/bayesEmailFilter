@@ -12,4 +12,4 @@ This is an Artificial Intelligence academic project for what its main requiremen
 3. Shall use the sms.csv file as the project emails data base or other public available repositories data.
 4. Shall use a training, test and validation collection 70/15/15.
 5. Can, eventually, submit the documents trough a pre-processing process to remove not relevant content like not informative characters or strings.
-6. Shall create a way of displaying the filter KPIS. (TODO)
+6. Shall create a way of displaying the filter KPIS.
