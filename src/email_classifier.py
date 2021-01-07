@@ -39,7 +39,7 @@ class EmailClassifier:
         xVals = [0, 1, 2, 3, 4, 5, 6]
         yVals = [self.spam, self.ham, len(self.unique_words.keys()), self.total_spam_words, self.total_spam_words, len(self.spam_words.keys()), len(self.ham_words.keys())]
         yLabels = ['Spam emails', 'Ham emails', 'Unique Words', 'Total in Spam', 'Total in Ham', 'Occur. Spam', 'Occur. Ham']
-        chart.showChart(xVals, yVals, 'Training Results', 'Classifications', 'Descriptions', yLabels)
+        chart.showChart(xVals, yVals, 'Training Results', 'Classifications', 'Amount', yLabels)
         print('Spam emails: '+str(self.spam))
         print('Ham emails: '+str(self.ham))
         print('Unique words in the vocabulary: ' +
@@ -111,9 +111,9 @@ class EmailClassifier:
         else:
             spamAndHamWordsDifference = prob_words_given_spam - prob_words_given_ham
         print('Words not in the DB:', str(spamAndHamWordsDifference))
-        print('Final result:', abs(probability_of_spam) > abs(probability_of_ham))
+        print('Final result:', probability_of_spam > probability_of_ham)
         
-        if(abs(probability_of_spam) > abs(probability_of_ham)):
+        if(probability_of_spam > probability_of_ham):
             print('This message is considered a spam!')
         else:
             print('This message is not considered a spam!')
