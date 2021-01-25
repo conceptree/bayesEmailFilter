@@ -6,17 +6,19 @@ from chart import ChartPrompt
 class EmailClassifier:
     def __init__(self):
 
-        self.trainingDB = '../data/spam_ham_dataset.csv'
+        #globals
+        self.trainingDB = '../data/spam_ham_dataset.csv' # training dataset
         self.types = ['spam', 'ham', 'unique_words', 'total_spam_words',
-                      'total_ham_words', 'spam_words', 'ham_words']
-        self.spam = self.ham = self.total_spam_words = self.total_ham_words = 0
-        self.unique_words = self.spam_words = self.ham_words = {}
+                      'total_ham_words', 'spam_words', 'ham_words'] # types list
+        self.spam = self.ham = self.total_spam_words = self.total_ham_words = 0 # int initialization
+        self.unique_words = self.spam_words = self.ham_words = {} # matrix
         self.train()
 
     def train(self):
-        parser = EmailParser()
-        result = parser.parse(self.trainingDB)
+        parser = EmailParser() # start the email parser
+        result = parser.parse(self.trainingDB) # trains the email dataset
 
+        # build globals based on training results
         for type in self.types:
             request = result.get(type)
             if(type == 'spam'):
@@ -52,6 +54,7 @@ class EmailClassifier:
               str(len(self.ham_words.keys())))
         print('Training complete! Source:', self.trainingDB)
 
+    # Words probabilities calculator based on pseudo code
     def prob_words_given_spam(self, email):
         sum = 0
         num_unique_words = len(self.unique_words.keys())
@@ -63,6 +66,7 @@ class EmailClassifier:
 
         return sum
 
+    # Words probabilities calculator based on pseudo code
     def prob_words_given_ham(self, email):
         sum = 0
         num_unique_words = len(self.unique_words.keys())
@@ -72,7 +76,8 @@ class EmailClassifier:
             sum += math.log(nominator / denominator)
 
         return sum
-
+    
+    # clean the email from a string or text file for special characters and uppercase.
     def clean(self, type, email):
         if(type == 'string'):
             lines = email.splitlines()
@@ -92,11 +97,15 @@ class EmailClassifier:
 
         return all_words
 
+    # classification base on the words total just like the pseudo code
     def classify(self, type, email):
         cleaned_email = self.clean(type, email)
 
+        # training base
         prob_spam = math.log(self.spam / (self.spam + self.ham))
         prob_ham = math.log(self.ham / (self.spam + self.ham))
+
+        # words probabilities 
         prob_words_given_spam = self.prob_words_given_spam(cleaned_email)
         prob_words_given_ham = self.prob_words_given_ham(cleaned_email)
         probability_of_spam = prob_spam + prob_words_given_spam

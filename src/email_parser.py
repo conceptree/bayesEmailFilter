@@ -26,23 +26,23 @@ class EmailParser:
             words = m.split()
             for word in words:
                 if self.unique_words.get(word):
-                    self.unique_words[word] += 1
+                    self.unique_words[word] += 1 # increment 1 for each word so that we dont get zeros
                 else:
                     self.unique_words[word] = 1
 
                 if is_spam:
-                    self.total_spam_words += 1
+                    self.total_spam_words += 1  # increment 1 for each word so that we dont get zeros
                     if self.spam_words.get(word):
-                        self.spam_words[word] += 1
+                        self.spam_words[word] += 1 # increment 1 for each word so that we dont get zeros
                     else:
                         self.spam_words[word] = 1
                 else:
-                    self.total_ham_words += 1
+                    self.total_ham_words += 1 # increment 1 for each word so that we dont get zeros
                     if self.ham_words.get(word):
-                        self.ham_words[word] += 1
+                        self.ham_words[word] += 1 # increment 1 for each word so that we dont get zeros
                     else:
                         self.ham_words[word] = 1
-
+    # Opens tha dataset file and iterates each text line so that we get the totals os spams and hams and also uniques
     def parse(self, training_data):
         with open(training_data, newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='|')
